@@ -32,6 +32,10 @@ struct
     int r;
 } Circle;
 
+bool circle_cross_rect(Circle, Rect);
+
+bool circle_cross_circle(Circle, Circle);
+
 bool circle_cross_point(Circle, Point);
 
 bool point_cross_segment(int, Segment);

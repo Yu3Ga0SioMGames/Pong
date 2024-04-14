@@ -44,7 +44,7 @@ bool segment_cross_segment(Segment a, Segment b)
 bool rect_cross_rect(Rect a, Rect b)
 {
     return segment_cross_segment(get_rect_proj_x(a),
-                                get_rect_proj_x(b)) &&
+                                 get_rect_proj_x(b)) &&
            segment_cross_segment(get_rect_proj_y(a),
-                                get_rect_proj_y(b));
+                                 get_rect_proj_y(b));
 }
