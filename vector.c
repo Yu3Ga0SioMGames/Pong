@@ -13,30 +13,38 @@ Vector vector_summ(Vector first, Vector second)
     return result;
 }
 
-// vector_multiplication
-Vector vector_multi(Vector v0, float n)
+Vector vector_multiplication(Vector v0, double n)
 {
     Vector v1 = {
-        v0.x * n;
-        v0.y * n;
+        v0.x * n,
+        v0.y *n
     };
 
     return v1;
 }
 
-Vector vector_module(Vector v0)
+int vector_module(Vector v0)
 {
-    return sqrt(v0.x * v0.x + v0.y * v0.y); // after... remake sqrt
+    return sqrt(v0.x * v0.x + v0.y * v0.y);
 }
 
-// vector_normalization
-Vector vector_normal(Vector v0)
+Vector vector_normalization(Vector v0)
 {
-    Vector vabs = vector_module(v0);
+    int vabs = vector_module(v0);
     Vector vN = {
-        v0.x / vabs;
-        v0.y / vabs;
+        v0.x / vabs,
+        v0.y / vabs
     };
 
     return vN;
+}
+
+Vector vector_rotate(Vector v, double corner)
+{
+    Vector v0 = {
+        v.x * cos(corner) + v.y * sin(corner),
+        v.x * sin(corner) - v.y * cos(corner)
+    };
+
+    return v0;
 }

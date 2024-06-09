@@ -7,10 +7,12 @@ typedef Point Vector;
 
 Vector vector_summ(Vector, Vector);
 
-Vector vector_multi(Vector, float); // vector_multiplication
+Vector vector_multiplication(Vector, double);
 
-Vector vector_module(Vector);
+int vector_module(Vector);
 
-Vector vector_normal(Vector); // vector_normalization
+Vector vector_normalization(Vector);
+
+Vector vector_rotate(Vector, double);
 
 #endif

@@ -33,6 +33,7 @@
 			<Add directory="/usr/include" />
 		</Compiler>
 		<Linker>
+			<Add option="-lm" />
 			<Add library="/usr/lib/x86_64-linux-gnu/libSDL2.so" />
 			<Add directory="/usr/lib/x86_64-linux-gnu" />
 		</Linker>

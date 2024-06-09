@@ -6,14 +6,16 @@
 1713123500 /home/yu3ga/Projects/Programming/Programs/Pong/collision.h
 	<stdbool.h>
 
-1712865548 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
+1717941920 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
+	<math.h>
 	<stdint.h>
 	<stdlib.h>
 	<unistd.h>
 	<SDL2/SDL.h>
+	"vector.h"
 	"collision.h"
 
-1704201762 /usr/include/stdint.h
+1715027668 /usr/include/stdint.h
 	<bits/libc-header-start.h>
 	<bits/types.h>
 	<bits/wchar.h>
@@ -21,7 +23,7 @@
 	<bits/stdint-intn.h>
 	<bits/stdint-uintn.h>
 
-1704201762 /usr/include/stdlib.h
+1715027668 /usr/include/stdlib.h
 	<bits/libc-header-start.h>
 	<stddef.h>
 	<bits/waitflags.h>
@@ -36,23 +38,23 @@
 	<bits/floatn.h>
 	<bits/stdlib-ldbl.h>
 
-1704201762 /usr/include/alloca.h
+1715027668 /usr/include/alloca.h
 	<features.h>
 	<stddef.h>
 
-1704201762 /usr/include/features.h
+1715027668 /usr/include/features.h
 	<features-time64.h>
 	<stdc-predef.h>
 	<sys/cdefs.h>
 	<gnu/stubs.h>
 
-1704201762 /usr/include/features-time64.h
+1715027668 /usr/include/features-time64.h
 	<bits/wordsize.h>
 	<bits/timesize.h>
 
-1704201762 /usr/include/stdc-predef.h
+1715027668 /usr/include/stdc-predef.h
 
-1704201762 /usr/include/unistd.h
+1715027668 /usr/include/unistd.h
 	<features.h>
 	<bits/posix_opt.h>
 	<bits/environments.h>
@@ -137,7 +139,7 @@
 1642206177 /usr/include/SDL2/SDL_config.h
 	<SDL2/_real_SDL_config.h>
 
-1704201762 /usr/include/stdio.h
+1715027668 /usr/include/stdio.h
 	<bits/libc-header-start.h>
 	<stddef.h>
 	<stdarg.h>
@@ -157,29 +159,29 @@
 	<bits/floatn.h>
 	<bits/stdio-ldbl.h>
 
-1704201762 /usr/include/malloc.h
+1715027668 /usr/include/malloc.h
 	<features.h>
 	<stddef.h>
 	<stdio.h>
 
-1704201762 /usr/include/memory.h
+1715027668 /usr/include/memory.h
 	<features.h>
 	<string.h>
 
-1704201762 /usr/include/string.h
+1715027668 /usr/include/string.h
 	<bits/libc-header-start.h>
 	<stddef.h>
 	<bits/types/locale_t.h>
 	<strings.h>
 	<bits/string_fortified.h>
 
-1704201762 /usr/include/strings.h
+1715027668 /usr/include/strings.h
 	<features.h>
 	<stddef.h>
 	<bits/types/locale_t.h>
 	<bits/strings_fortified.h>
 
-1704201762 /usr/include/wchar.h
+1715027668 /usr/include/wchar.h
 	<bits/libc-header-start.h>
 	<bits/floatn.h>
 	<stddef.h>
@@ -195,18 +197,18 @@
 	<bits/floatn.h>
 	<bits/wchar-ldbl.h>
 
-1704201762 /usr/include/inttypes.h
+1715027668 /usr/include/inttypes.h
 	<features.h>
 	<stdint.h>
 	<stddef.h>
 
-1704201762 /usr/include/ctype.h
+1715027668 /usr/include/ctype.h
 	<features.h>
 	<bits/types.h>
 	<bits/endian.h>
 	<bits/types/locale_t.h>
 
-1704201762 /usr/include/math.h
+1715027668 /usr/include/math.h
 	<bits/libc-header-start.h>
 	<bits/types.h>
 	<bits/math-vector.h>
@@ -270,7 +272,7 @@
 	<signal.h>
 	"close_code.h"
 
-1704201762 /usr/include/signal.h
+1715027668 /usr/include/signal.h
 	<features.h>
 	<bits/types.h>
 	<bits/signum-generic.h>
@@ -334,7 +336,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1704201762 /usr/include/endian.h
+1715027668 /usr/include/endian.h
 	<features.h>
 	<bits/endian.h>
 	<bits/byteswap.h>
@@ -596,5 +598,16 @@
 
 1713123701 source:/home/yu3ga/Projects/Programming/Programs/Pong/circle.c
 	<stdbool.h>
+	"collision.h"
+
+1717931208 source:/home/yu3ga/Projects/Programming/Programs/Pong/vector.c
+	<math.h>
+	"vector.h"
+	"collision.h"
+
+1717930202 /home/yu3ga/Projects/Programming/Programs/Pong/vector.h
+	"collision.h"
+
+1717941258 source:/home/yu3ga/Projects/Programming/Programs/Pong/relative_rotate.c
 	"collision.h"
 
