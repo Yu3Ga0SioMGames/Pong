@@ -276,8 +276,6 @@ int main()
         return 1;
     }
 
-    /*
-
     SquareGameState square_game_state;
     InitSquareGameState(&square_game_state);
     while(!(square_game_state.exit)) {
@@ -287,8 +285,6 @@ int main()
 
         SquareRender(renderer, &square_game_state);
     }
-
-    */
 
     VectorGameState vector_game_state;
     InitVectorGameState(&vector_game_state);
