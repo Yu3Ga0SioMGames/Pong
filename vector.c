@@ -13,7 +13,7 @@ Vector vector_summ(Vector first, Vector second)
     return result;
 }
 
-Vector vector_multiplication(Vector v0, double n)
+Vector vector_multiplication(Vector v0, float n)
 {
     Vector v1 = {
         v0.x * n,
@@ -39,11 +39,11 @@ Vector vector_normalization(Vector v0)
     return vN;
 }
 
-Vector vector_rotate(Vector v, double corner)
+Vector vector_rotate(Vector v, float angle)
 {
     Vector v0 = {
-        v.x * cos(corner) + v.y * sin(corner),
-        v.x * sin(corner) - v.y * cos(corner)
+        v.x * cos(angle) + v.y * sin(angle),
+        v.x * sin(angle) - v.y * cos(angle)
     };
 
     return v0;

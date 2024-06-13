@@ -26,6 +26,7 @@ struct
     Vector v[3];
     int current_color;
     SDL_Color color[2];
+    float angle;
 } VectorGameState;
 
 void InitSquareGameState(SquareGameState *state)
@@ -63,8 +64,8 @@ void InitVectorGameState(VectorGameState *state)
     state->v[1].x = 275;
     state->v[1].y = 275;
 
-    state->v[2].x = 325;
-    state->v[2].y = 275;
+    state->v[2].x = 275;
+    state->v[2].y = 325;
 
     state->current_color = 0;
 
@@ -77,6 +78,8 @@ void InitVectorGameState(VectorGameState *state)
     state->color[1].g = 0;
     state->color[1].b = 0;
     state->color[1].a = 255;
+
+    state->angle = 0;
 }
 
 int SquareInputHandler(SquareGameState *game_state)
@@ -230,9 +233,11 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
                                    clear_color->a)) {
         return 1;
     }
+
     if(SDL_RenderClear(renderer) != 0) {
         return 1;
     }
+
     for(int i = 0; i < 2; ++i) {
         SDL_Color *draw_color = &(palette[0]);
         SDL_SetRenderDrawColor(renderer,
@@ -248,12 +253,20 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
                            color->g,
                            color->b,
                            color->a);
-    SDL_RenderDrawLine(renderer,  275, 275,
-                       state->v[0].x, state->v[0].y);
-    SDL_RenderDrawLine(renderer,  300, 225,
-                       state->v[1].x, state->v[1].y);
-    SDL_RenderDrawLine(renderer,  300, 225,
-                       state->v[2].x, state->v[2].y);
+
+    Vector v[3];
+    for(int i = 0; i < 3; ++i) {
+        v[i] = vector_rotate(state->v[i], state->angle);
+    }
+
+    SDL_RenderDrawLine(renderer,  v[0].x, v[0].y,
+                       v[1].x, v[1].y);
+
+    SDL_RenderDrawLine(renderer,  v[1].x, v[1].y,
+                       v[2].x, v[2].y);
+
+    SDL_RenderDrawLine(renderer, v[2].x, v[2].y,
+                       v[0].x, v[0].y);
 
     SDL_RenderPresent(renderer);
 
@@ -276,6 +289,8 @@ int main()
         return 1;
     }
 
+    /*
+
     SquareGameState square_game_state;
     InitSquareGameState(&square_game_state);
     while(!(square_game_state.exit)) {
@@ -285,6 +300,8 @@ int main()
 
         SquareRender(renderer, &square_game_state);
     }
+
+    */
 
     VectorGameState vector_game_state;
     InitVectorGameState(&vector_game_state);
