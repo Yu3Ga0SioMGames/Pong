@@ -46,9 +46,17 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="object.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="object.h" />
 		<Unit filename="rectangle.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="shape.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="shape.h" />
 		<Unit filename="vector.c">
 			<Option compilerVar="CC" />
 		</Unit>
