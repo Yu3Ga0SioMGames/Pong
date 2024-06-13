@@ -27,6 +27,7 @@ struct
     int current_color;
     SDL_Color color[2];
     float angle;
+    Vector cursor;
 } VectorGameState;
 
 void InitSquareGameState(SquareGameState *state)
@@ -79,7 +80,7 @@ void InitVectorGameState(VectorGameState *state)
     state->color[1].b = 0;
     state->color[1].a = 255;
 
-    state->angle = 0;
+    state->angle = 15;
 }
 
 int SquareInputHandler(SquareGameState *game_state)
@@ -199,8 +200,18 @@ int VectorInputHandler(VectorGameState *state)
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
+        case SDL_MOUSEMOTION:
+            state->cursor.x = event.motion.x;
+            state->cursor.y = event.motion.y;
+            break;
         case SDL_KEYDOWN:
-            // ...code...;
+            if(SDLK_a == event.key.keysym.sym) {
+                state->angle += 5;
+            }
+
+            if(SDLK_d == event.key.keysym.sym) {
+                state->angle -= 5;
+            }
 
             if(SDLK_ESCAPE != event.key.keysym.sym) {
                 break;
@@ -256,8 +267,22 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
 
     Vector v[3];
     for(int i = 0; i < 3; ++i) {
-        v[i] = vector_rotate(state->v[i], state->angle);
+        v[i] = vector_summ(state->v[i], vector_multiplication(state->cursor, -1));
+
+        v[i] = vector_rotate(v[i], state->angle);
+
+        v[i] = vector_summ(v[i], state->cursor);
     }
+
+    SDL_RenderDrawLine(renderer,  state->v[0].x, state->v[0].y,
+                       state->v[1].x, state->v[1].y);
+
+    SDL_RenderDrawLine(renderer,  state->v[1].x, state->v[1].y,
+                       state->v[2].x, state->v[2].y);
+
+    SDL_RenderDrawLine(renderer, state->v[2].x, state->v[2].y,
+                       state->v[0].x, state->v[0].y);
+
 
     SDL_RenderDrawLine(renderer,  v[0].x, v[0].y,
                        v[1].x, v[1].y);
