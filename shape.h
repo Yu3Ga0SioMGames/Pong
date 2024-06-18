@@ -1,10 +1,14 @@
 #ifndef SHAPE_H_INCLUDED
 #define SHAPE_H_INCLUDED
 
-typedef void *Shape;
-typedef void (*shape_draw_ptr)(Shape, int, int);
-typedef void (*shape_rotate_ptr)(Shape, float);
-typedef void (*shape_scale_ptr)(Shape, float);
+#include <SDL2/SDL.h>
+
+#include "vector.h"
+
+typedef void *ShapePtr;
+typedef void (*shape_draw_ptr)(ShapePtr, int, int);
+typedef void (*shape_rotate_ptr)(ShapePtr, float);
+typedef void (*shape_scale_ptr)(ShapePtr, float);
 
 typedef
 struct
@@ -14,31 +18,13 @@ struct
     shape_scale_ptr scale;
 } ShapeMTable;
 
-ShapeMTable circle_table = {
-    circle_draw();
-    circle_rotate();
-    circle_scale();
-};
-
-ShapeMTable square_table = {
-    square_draw();
-    square_rotate();
-    square_scale();
-};
-
-ShapeMTable polygon_table = {
-    polygon_draw();
-    polygon_rotate();
-    polygon_scale();
-};
-
 typedef
 struct
 {
     ShapeMTable *m_table;
 } Shape;
 
-typedef
+/* typedef
 struct
 {
     Shape header;
@@ -49,26 +35,36 @@ typedef
 struct
 {
     Shape header;
-} Square;
+} Square; */
 
 typedef
 struct
 {
     Shape header;
+    int point_count;
+    Point points[];
 } Polygon;
 
-void shape_draw(Shape, int, int);
+/* void shape_draw(Shape, int, int);
 
 Shape shape_rotate(Shape, float);
 
 Shape shape_scale(Shape, float);
 
-// Shape shape_rotate_around(Shape, Angle, RotationCenter);
+Shape shape_rotate_around(Shape, Angle, RotationCenter); */
 
-Circle shape_create_circle();
+void polygon_draw(SDL_Renderer *, Polygon *, int, int);
 
-Square shape_create_square();
+Polygon polygon_rotate(Polygon, float);
 
-Polygon *shape_create_polygon(int, Point);
+Polygon polygon_scale(Polygon, float);
+
+/* Circle shape_create_circle();
+
+Square shape_create_square(); */
+
+Polygon *shape_create_polygon(int, Vector[]);
+
+void shape_free_polygon(Polygon *);
 
 #endif

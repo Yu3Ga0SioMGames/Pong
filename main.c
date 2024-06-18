@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <SDL2/SDL.h>
 
+#include "shape.h"
 #include "vector.h"
 #include "collision.h"
 
@@ -28,6 +29,7 @@ struct
     SDL_Color color[2];
     float angle;
     Vector cursor;
+    Polygon *polygon;
 } VectorGameState;
 
 void InitSquareGameState(SquareGameState *state)
@@ -81,6 +83,21 @@ void InitVectorGameState(VectorGameState *state)
     state->color[1].a = 255;
 
     state->angle = 15;
+
+    Vector vectors[5] = {
+        {0,-30},
+        {35, 0},
+        {25, 30},
+        {-25, 30},
+        {-35, 0}
+    };
+
+    state->polygon = shape_create_polygon(5, vectors);
+}
+
+void FreeVectorGameState(VectorGameState *state)
+{
+    shape_free_polygon(state->polygon);
 }
 
 int SquareInputHandler(SquareGameState *game_state)
@@ -293,6 +310,8 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
     SDL_RenderDrawLine(renderer, v[2].x, v[2].y,
                        v[0].x, v[0].y);
 
+    polygon_draw(renderer, state->polygon, 625, 425);
+
     SDL_RenderPresent(renderer);
 
     return 0;
@@ -314,9 +333,7 @@ int main()
         return 1;
     }
 
-    /*
-
-    SquareGameState square_game_state;
+    /* SquareGameState square_game_state;
     InitSquareGameState(&square_game_state);
     while(!(square_game_state.exit)) {
         SquareInputHandler(&square_game_state);
@@ -324,9 +341,7 @@ int main()
         SquareActionHandler(&square_game_state);
 
         SquareRender(renderer, &square_game_state);
-    }
-
-    */
+    } */
 
     VectorGameState vector_game_state;
     InitVectorGameState(&vector_game_state);
@@ -337,6 +352,7 @@ int main()
 
         VectorRender(renderer, &vector_game_state);
     }
+    FreeVectorGameState(&vector_game_state);
 
     SDL_DestroyRenderer(renderer);
 
