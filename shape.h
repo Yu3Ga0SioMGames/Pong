@@ -65,22 +65,10 @@ Shape shape_scale(Shape, float);
 
 // Shape shape_rotate_around(Shape, Angle, RotationCenter);
 
-Circle shape_create_circle()
-{
-    Circle *ptr = malloc(sizeof(Circle));
-    ptr->header.m_table = &circle_table;
-}
+Circle shape_create_circle();
 
-Square shape_create_square()
-{
-    Square *ptr = malloc(sizeof(Square));
-    ptr->header.m_table = &square_table;
-}
+Square shape_create_square();
 
-Polygon shape_create_square()
-{
-    Polygon *ptr = malloc(sizeof(Polygon));
-    ptr->header.m_table = &polygon_table;
-}
+Polygon *shape_create_polygon(int, Point);
 
 #endif
