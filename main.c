@@ -28,6 +28,7 @@ struct
     int current_color;
     SDL_Color color[2];
     float angle;
+    float scale;
     Vector cursor;
     Polygon *polygon;
 } VectorGameState;
@@ -84,8 +85,10 @@ void InitVectorGameState(VectorGameState *state)
 
     state->angle = 15;
 
+    state->scale = 1;
+
     Vector vectors[5] = {
-        {0,-30},
+        {0, -30},
         {35, 0},
         {25, 30},
         {-25, 30},
@@ -230,6 +233,14 @@ int VectorInputHandler(VectorGameState *state)
                 state->angle -= 5;
             }
 
+            if(SDLK_w == event.key.keysym.sym) {
+                state->scale += 0.125;
+            }
+
+            if(SDLK_s == event.key.keysym.sym) {
+                state->scale -= 0.125;
+            }
+
             if(SDLK_ESCAPE != event.key.keysym.sym) {
                 break;
             }
@@ -261,7 +272,6 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
                                    clear_color->a)) {
         return 1;
     }
-
     if(SDL_RenderClear(renderer) != 0) {
         return 1;
     }
@@ -274,7 +284,6 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
                                draw_color->b,
                                draw_color->a);
     }
-
     SDL_Color *color = &(palette[1]);
     SDL_SetRenderDrawColor(renderer,
                            color->r,
@@ -285,32 +294,32 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
     Vector v[3];
     for(int i = 0; i < 3; ++i) {
         v[i] = vector_summ(state->v[i], vector_multiplication(state->cursor, -1));
-
         v[i] = vector_rotate(v[i], state->angle);
-
         v[i] = vector_summ(v[i], state->cursor);
     }
 
     SDL_RenderDrawLine(renderer,  state->v[0].x, state->v[0].y,
                        state->v[1].x, state->v[1].y);
-
     SDL_RenderDrawLine(renderer,  state->v[1].x, state->v[1].y,
                        state->v[2].x, state->v[2].y);
-
     SDL_RenderDrawLine(renderer, state->v[2].x, state->v[2].y,
                        state->v[0].x, state->v[0].y);
 
 
     SDL_RenderDrawLine(renderer,  v[0].x, v[0].y,
                        v[1].x, v[1].y);
-
     SDL_RenderDrawLine(renderer,  v[1].x, v[1].y,
                        v[2].x, v[2].y);
-
     SDL_RenderDrawLine(renderer, v[2].x, v[2].y,
                        v[0].x, v[0].y);
 
-    polygon_draw(renderer, state->polygon, 625, 425);
+    unsigned char buffer[sizeof(Polygon) + sizeof(Vector) * 10];
+    Polygon *result = (Polygon *) buffer;
+    result->header = state->polygon->header;
+    result->point_count = state->polygon->point_count;
+    polygon_rotate(state->polygon, result, state->angle);
+    polygon_scale(result, result, state->scale);
+    polygon_draw(renderer, result, 625, 425);
 
     SDL_RenderPresent(renderer);
 

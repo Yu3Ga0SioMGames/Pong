@@ -40,6 +40,36 @@ Shape shape_rotate_around(Shape, Angle, RotationCenter)
 
 } */
 
+/* void square_draw(Square, int, int)
+{
+    ;
+}
+
+Square square_rotate(Square, float)
+{
+    ;
+}
+
+Square square_scale(Square, float)
+{
+    ;
+} */
+
+/* void circle_draw(Circle, int, int)
+{
+    ;
+}
+
+Circle circle_rotate(Circle, float)
+{
+    ;
+}
+
+Circle circle_scale(Circle, float)
+{
+    ;
+} */
+
 void polygon_draw(SDL_Renderer *renderer, Polygon *polygon, int x, int y)
 {
     for(int i = 0; i < polygon->point_count - 1; ++i) {
@@ -49,6 +79,20 @@ void polygon_draw(SDL_Renderer *renderer, Polygon *polygon, int x, int y)
 
     SDL_RenderDrawLine(renderer, polygon->points[polygon->point_count - 1].x + x, polygon->points[polygon->point_count - 1].y + y,
                        polygon->points[0].x + x, polygon->points[0].y + y);
+}
+
+void polygon_rotate(Polygon *polygon, Polygon *result, float angle)
+{
+    for(int i = 0; i < polygon->point_count; ++i) {
+        result->points[i] = vector_rotate(polygon->points[i], angle);
+    }
+}
+
+void polygon_scale(Polygon *polygon, Polygon *result, float factor)
+{
+    for(int i = 0; i < polygon->point_count; ++i) {
+        result->points[i] = vector_multiplication(polygon->points[i], factor);
+    }
 }
 
 /* Circle shape_create_circle()

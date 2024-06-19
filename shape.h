@@ -29,9 +29,9 @@ struct
 {
     Shape header;
     int radius;
-} Circle;
+} Circle; */
 
-typedef
+/* typedef
 struct
 {
     Shape header;
@@ -53,15 +53,31 @@ Shape shape_scale(Shape, float);
 
 Shape shape_rotate_around(Shape, Angle, RotationCenter); */
 
+/* void square_draw(Square, int, int);
+
+Square square_rotate(Square, float);
+
+Square square_scale(Square, float); */
+
+/* void circle_draw(Circle, int, int);
+
+Circle circle_rotate(Circle, float);
+
+Circle circle_scale(Circle, float); */
+
 void polygon_draw(SDL_Renderer *, Polygon *, int, int);
 
-Polygon polygon_rotate(Polygon, float);
+void polygon_rotate(Polygon *, Polygon *, float);
 
-Polygon polygon_scale(Polygon, float);
+void polygon_scale(Polygon *, Polygon *, float);
 
 /* Circle shape_create_circle();
 
-Square shape_create_square(); */
+void shape_free_circle(Circle *);
+
+Square shape_create_square();
+
+void shape_free_square(Square *); */
 
 Polygon *shape_create_polygon(int, Vector[]);
 
