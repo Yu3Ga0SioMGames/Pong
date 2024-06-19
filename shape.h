@@ -6,7 +6,7 @@
 #include "vector.h"
 
 typedef void *ShapePtr;
-typedef void (*shape_draw_ptr)(ShapePtr, int, int);
+typedef void (*shape_draw_ptr)(SDL_Renderer *, ShapePtr, int, int);
 typedef void (*shape_rotate_ptr)(ShapePtr, float);
 typedef void (*shape_scale_ptr)(ShapePtr, float);
 
@@ -41,17 +41,16 @@ typedef
 struct
 {
     Shape header;
-    int point_count;
-    Point points[];
-} Polygon;
+    Point points[3];
+} Triangle;
 
-/* void shape_draw(Shape, int, int);
+void shape_draw(SDL_Renderer *, Shape *, int, int);
 
 Shape shape_rotate(Shape, float);
 
 Shape shape_scale(Shape, float);
 
-Shape shape_rotate_around(Shape, Angle, RotationCenter); */
+// Shape shape_rotate_around(Shape, Angle, RotationCenter);
 
 /* void square_draw(Square, int, int);
 
@@ -65,11 +64,11 @@ Circle circle_rotate(Circle, float);
 
 Circle circle_scale(Circle, float); */
 
-void polygon_draw(SDL_Renderer *, Polygon *, int, int);
+void triangle_draw(SDL_Renderer *, Triangle *, int, int);
 
-void polygon_rotate(Polygon *, Polygon *, float);
+Triangle triangle_rotate(Triangle *, float);
 
-void polygon_scale(Polygon *, Polygon *, float);
+Triangle triangle_scale(Triangle *, float);
 
 /* Circle shape_create_circle();
 
@@ -79,8 +78,10 @@ Square shape_create_square();
 
 void shape_free_square(Square *); */
 
-Polygon *shape_create_polygon(int, Vector[]);
+void triangle_init(Triangle *);
 
-void shape_free_polygon(Polygon *);
+Triangle *shape_create_triangle(Vector[3]);
+
+void shape_free_triangle(Triangle *);
 
 #endif

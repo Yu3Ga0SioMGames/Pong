@@ -14,28 +14,28 @@ ShapeMTable square_table = {
     square_scale
 }; */
 
-ShapeMTable polygon_table = {
-    polygon_draw,
-    /* polygon_rotate,
-    polygon_scale */
+ShapeMTable triangle_table = {
+    triangle_draw,
+    triangle_rotate,
+    triangle_scale
 };
 
-/* void shape_draw(Shape, int, int)
+void shape_draw(SDL_Renderer *renderer, Shape *shape, int x, int y)
 {
-
+    shape->m_table->draw(renderer, shape, x, y);
 }
 
-Shape shape_rotate(Shape, float)
+/* Shape shape_rotate(Shape, float)
+{
+    shape->m_table->draw(renderer, shape, x, y);
+} */
+
+/* Shape shape_scale(Shape, float)
 {
 
-}
+} */
 
-Shape shape_scale(Shape, float)
-{
-
-}
-
-Shape shape_rotate_around(Shape, Angle, RotationCenter)
+/* Shape shape_rotate_around(Shape, Angle, RotationCenter)
 {
 
 } */
@@ -70,32 +70,47 @@ Circle circle_scale(Circle, float)
     ;
 } */
 
-void polygon_draw(SDL_Renderer *renderer, Polygon *polygon, int x, int y)
+void triangle_draw(SDL_Renderer *renderer, Triangle *polygon, int x, int y)
 {
-    for(int i = 0; i < polygon->point_count - 1; ++i) {
+    for(int i = 0; i < 2; ++i) {
         SDL_RenderDrawLine(renderer, polygon->points[i].x + x, polygon->points[i].y + y,
                            polygon->points[i + 1].x + x, polygon->points[i + 1].y + y);
     }
 
-    SDL_RenderDrawLine(renderer, polygon->points[polygon->point_count - 1].x + x, polygon->points[polygon->point_count - 1].y + y,
+    SDL_RenderDrawLine(renderer, polygon->points[2].x + x, polygon->points[2].y + y,
                        polygon->points[0].x + x, polygon->points[0].y + y);
 }
 
-void polygon_rotate(Polygon *polygon, Polygon *result, float angle)
+Triangle triangle_rotate(Triangle *polygon, float angle)
 {
-    for(int i = 0; i < polygon->point_count; ++i) {
-        result->points[i] = vector_rotate(polygon->points[i], angle);
+    Triangle result;
+    result.header = polygon->header;
+
+    for(int i = 0; i < 3; ++i) {
+        result.points[i] = vector_rotate(polygon->points[i], angle);
     }
+
+    return result;
 }
 
-void polygon_scale(Polygon *polygon, Polygon *result, float factor)
+Triangle triangle_scale(Triangle *polygon, float factor)
 {
-    for(int i = 0; i < polygon->point_count; ++i) {
-        result->points[i] = vector_multiplication(polygon->points[i], factor);
+    Triangle result;
+    result.header = polygon->header;
+
+    for(int i = 0; i < 3; ++i) {
+        result.points[i] = vector_multiplication(polygon->points[i], factor);
     }
+
+    return result;
 }
 
-/* Circle shape_create_circle()
+/* void circle_init()
+{
+
+}
+
+Circle shape_create_circle()
 {
     Circle *ptr = malloc(sizeof(Circle));
     ptr->header.m_table = &circle_table;
@@ -104,6 +119,11 @@ void polygon_scale(Polygon *polygon, Polygon *result, float factor)
 void shape_free_circle(Circle *circle)
 {
     free(circle);
+}
+
+void square_init()
+{
+
 }
 
 Square shape_create_square()
@@ -117,21 +137,23 @@ void shape_free_square(Square *square)
     free(square);
 } */
 
-Polygon *shape_create_polygon(int point_count, Vector points[])
+void triangle_init(Triangle *triangle)
 {
-    Polygon *ptr = (Polygon *)malloc(sizeof(Polygon) + sizeof(Vector) * point_count);
+    triangle->header.m_table = &triangle_table;
+}
 
-    ptr->header.m_table = &polygon_table;
-    ptr->point_count = point_count;
-
-    for(int i = 0; i < point_count; ++i) {
+Triangle *shape_create_triangle(Vector points[3])
+{
+    Triangle *ptr = (Triangle *)malloc(sizeof(Triangle) + sizeof(Vector) * 3);
+    triangle_init(ptr);
+    for(int i = 0; i < 3; ++i) {
         ptr->points[i] = points[i];
     }
 
     return ptr;
 }
 
-void shape_free_polygon(Polygon *polygon)
+void shape_free_triangle(Triangle *polygon)
 {
     free(polygon);
 }

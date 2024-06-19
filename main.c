@@ -30,7 +30,7 @@ struct
     float angle;
     float scale;
     Vector cursor;
-    Polygon *polygon;
+    Triangle *polygon;
 } VectorGameState;
 
 void InitSquareGameState(SquareGameState *state)
@@ -89,18 +89,18 @@ void InitVectorGameState(VectorGameState *state)
 
     Vector vectors[5] = {
         {0, -30},
-        {35, 0},
+        // {35, 0},
         {25, 30},
-        {-25, 30},
+        // {-25, 30},
         {-35, 0}
     };
 
-    state->polygon = shape_create_polygon(5, vectors);
+    state->polygon = shape_create_triangle(vectors);
 }
 
 void FreeVectorGameState(VectorGameState *state)
 {
-    shape_free_polygon(state->polygon);
+    shape_free_triangle(state->polygon);
 }
 
 int SquareInputHandler(SquareGameState *game_state)
@@ -313,13 +313,11 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
     SDL_RenderDrawLine(renderer, v[2].x, v[2].y,
                        v[0].x, v[0].y);
 
-    unsigned char buffer[sizeof(Polygon) + sizeof(Vector) * 10];
-    Polygon *result = (Polygon *) buffer;
-    result->header = state->polygon->header;
-    result->point_count = state->polygon->point_count;
-    polygon_rotate(state->polygon, result, state->angle);
-    polygon_scale(result, result, state->scale);
-    polygon_draw(renderer, result, 625, 425);
+    Triangle result;
+    // triangle_init(&result);
+    result = triangle_rotate(state->polygon, state->angle);
+    result = triangle_scale(&result, state->scale);
+    shape_draw(renderer, &result, 625, 425);
 
     SDL_RenderPresent(renderer);
 
