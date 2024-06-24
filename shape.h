@@ -31,11 +31,12 @@ struct
     int radius;
 } Circle; */
 
-/* typedef
+typedef
 struct
 {
     Shape header;
-} Square; */
+    Vector points[4];
+} Square;
 
 typedef
 struct
@@ -46,23 +47,21 @@ struct
 
 void shape_draw(SDL_Renderer *, Shape *, int, int);
 
-Shape shape_rotate(Shape, float);
+Shape shape_rotate(Shape *, float);
 
-Shape shape_scale(Shape, float);
+Shape shape_scale(Shape *, float);
 
 // Shape shape_rotate_around(Shape, Angle, RotationCenter);
 
-/* void square_draw(Square, int, int);
+void square_draw(SDL_Renderer *, Square *, int, int);
 
-Square square_rotate(Square, float);
+Square square_rotate(Square *, float);
 
-Square square_scale(Square, float); */
+Square square_scale(Square *, float);
 
-/* void circle_draw(Circle, int, int);
+/* void circle_draw(SDL_Renderer *, Circle *, int, int);
 
-Circle circle_rotate(Circle, float);
-
-Circle circle_scale(Circle, float); */
+Circle circle_scale(Circle *, float); */
 
 void triangle_draw(SDL_Renderer *, Triangle *, int, int);
 
@@ -70,13 +69,17 @@ Triangle triangle_rotate(Triangle *, float);
 
 Triangle triangle_scale(Triangle *, float);
 
-/* Circle shape_create_circle();
+/* void circle_init(Circle *);
+
+Circle shape_create_circle(); */
 
 void shape_free_circle(Circle *);
 
-Square shape_create_square();
+void square_init(Square *, int, int);
 
-void shape_free_square(Square *); */
+Square *shape_create_square(Square *, int, int);
+
+void shape_free_square(Square *);
 
 void triangle_init(Triangle *);
 

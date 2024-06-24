@@ -4,15 +4,15 @@
 
 /* ShapeMTable circle_table = {
     circle_draw,
-    circle_rotate,
+    NULL,
     circle_scale
-};
+}; */
 
 ShapeMTable square_table = {
     square_draw,
     square_rotate,
     square_scale
-}; */
+};
 
 ShapeMTable triangle_table = {
     triangle_draw,
@@ -25,14 +25,19 @@ void shape_draw(SDL_Renderer *renderer, Shape *shape, int x, int y)
     shape->m_table->draw(renderer, shape, x, y);
 }
 
-/* Shape shape_rotate(Shape, float)
+/* Shape shape_rotate(Shape *shape, float angle)
 {
-    shape->m_table->draw(renderer, shape, x, y);
-} */
+    shape_rotate_ptr ptr = shape->m_table->rotate;
+    if(ptr != NULL) {
+        ptr(shape, angle);
+    }
 
-/* Shape shape_scale(Shape, float)
+    return ;
+}
+
+Shape shape_scale(Shape *shape, float factor)
 {
-
+    return shape->m_table->scale(shape, factor);
 } */
 
 /* Shape shape_rotate_around(Shape, Angle, RotationCenter)
@@ -40,32 +45,47 @@ void shape_draw(SDL_Renderer *renderer, Shape *shape, int x, int y)
 
 } */
 
-/* void square_draw(Square, int, int)
+void square_draw(SDL_Renderer *renderer, Square *polygon, int x, int y)
+{
+    for(int i = 0; i < 3; ++i) {
+        SDL_RenderDrawLine(renderer, polygon->points[i].x + x, polygon->points[i].y + y,
+                           polygon->points[i + 1].x + x, polygon->points[i + 1].y + y);
+    }
+
+    SDL_RenderDrawLine(renderer, polygon->points[3].x + x, polygon->points[3].y + y,
+                       polygon->points[0].x + x, polygon->points[0].y + y);
+}
+
+Square square_rotate(Square *polygon, float angle)
+{
+    Square result;
+    result.header = polygon->header;
+
+    for(int i = 0; i < 4; ++i) {
+        result.points[i] = vector_rotate(polygon->points[i], angle);
+    }
+
+    return result;
+}
+
+Square square_scale(Square *polygon, float factor)
+{
+    Square result;
+    result.header = polygon->header;
+
+    for(int i = 0; i < 4; ++i) {
+        result.points[i] = vector_multiplication(polygon->points[i], factor);
+    }
+
+    return result;
+}
+
+/* void circle_draw(SDL_Renderer *renderer, Circle *circle, int x, int y)
 {
     ;
 }
 
-Square square_rotate(Square, float)
-{
-    ;
-}
-
-Square square_scale(Square, float)
-{
-    ;
-} */
-
-/* void circle_draw(Circle, int, int)
-{
-    ;
-}
-
-Circle circle_rotate(Circle, float)
-{
-    ;
-}
-
-Circle circle_scale(Circle, float)
+Circle circle_scale(Circle *circle, float factor)
 {
     ;
 } */
@@ -112,30 +132,43 @@ Triangle triangle_scale(Triangle *polygon, float factor)
 
 Circle shape_create_circle()
 {
-    Circle *ptr = malloc(sizeof(Circle));
-    ptr->header.m_table = &circle_table;
-}
+
+} */
 
 void shape_free_circle(Circle *circle)
 {
     free(circle);
 }
 
-void square_init()
+void square_init(Square *ptr, int h, int w)
 {
+    ptr->header.m_table = &square_table;
 
+    ptr->points[0].x = -(w / 2 + w % 2);
+    ptr->points[0].y = -(h / 2 + h % 2);
+
+    ptr->points[1].x = w / 2;
+    ptr->points[1].y = -(h / 2 + h % 2);
+
+    ptr->points[2].x = w / 2;
+    ptr->points[2].y = h / 2;
+
+    ptr->points[3].x = -(w / 2 + w % 2);
+    ptr->points[3].y = h / 2;
 }
 
-Square shape_create_square()
+Square *shape_create_square(Square *square, int h, int w)
 {
-    Square *ptr = malloc(sizeof(Square));
-    ptr->header.m_table = &square_table;
+    Square *ptr = (Square *)malloc(sizeof(Square) + sizeof(Vector) + 4);
+    square_init(ptr, h, w);
+
+    return ptr;
 }
 
 void shape_free_square(Square *square)
 {
     free(square);
-} */
+}
 
 void triangle_init(Triangle *triangle)
 {
