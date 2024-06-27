@@ -2,11 +2,11 @@
 
 #include "shape.h"
 
-/* ShapeMTable circle_table = {
+ShapeMTable circle_table = {
     circle_draw,
     NULL,
     circle_scale
-}; */
+};
 
 ShapeMTable square_table = {
     square_draw,
@@ -22,23 +22,27 @@ ShapeMTable triangle_table = {
 
 void shape_draw(SDL_Renderer *renderer, Shape *shape, int x, int y)
 {
-    shape->m_table->draw(renderer, shape, x, y);
+    ((ShapeMTable *)(shape->m_table))->draw(renderer, shape, x, y);
 }
 
-/* Shape shape_rotate(Shape *shape, float angle)
+AnyShape shape_rotate(Shape *shape, float angle)
 {
-    shape_rotate_ptr ptr = shape->m_table->rotate;
+    shape_rotate_ptr ptr = ((ShapeMTable *)(shape->m_table))->rotate;
     if(ptr != NULL) {
-        ptr(shape, angle);
+        return ptr(shape, angle);
     }
 
-    return ;
+    AnyShape any_shape = *((AnyShape *)shape);
+
+    return any_shape;
 }
 
-Shape shape_scale(Shape *shape, float factor)
+AnyShape shape_scale(Shape *shape, float factor)
 {
-    return shape->m_table->scale(shape, factor);
-} */
+    AnyShape result = ((ShapeMTable *)(shape->m_table))->scale(shape, factor);
+
+    return result;
+}
 
 /* Shape shape_rotate_around(Shape, Angle, RotationCenter)
 {
@@ -80,15 +84,38 @@ Square square_scale(Square *polygon, float factor)
     return result;
 }
 
-/* void circle_draw(SDL_Renderer *renderer, Circle *circle, int x, int y)
+void circle_draw(SDL_Renderer *renderer, Circle *circle, int x, int y)
 {
-    ;
+    Vector points[8] = {
+        {0, 10},
+        {7, 7},
+        {10, 0},
+        {7, -7},
+        {0, -10},
+        {-7, -7},
+        {-10, 0},
+        {-7, 7}
+    };
+
+    int r = circle->radius;
+
+    for(int i = 0; i < 7; ++i) {
+        SDL_RenderDrawLine(renderer, points[i].x * r + x, points[i].y * r + y,
+                           points[i + 1].x * r + x, points[i + 1].y * r + y);
+    }
+
+    SDL_RenderDrawLine(renderer, points[7].x * r + x, points[7].y * r + y,
+                       points[0].x * r + x, points[0].y * r + y);
 }
 
 Circle circle_scale(Circle *circle, float factor)
 {
-    ;
-} */
+    Circle result;
+    result.header = circle->header;
+    result.radius = circle->radius * factor;
+
+    return result;
+}
 
 void triangle_draw(SDL_Renderer *renderer, Triangle *polygon, int x, int y)
 {
@@ -125,17 +152,22 @@ Triangle triangle_scale(Triangle *polygon, float factor)
     return result;
 }
 
-/* void circle_init()
+void circle_init(Circle *circle, int radius)
 {
+    circle->header.m_table = &circle_table;
 
+    circle->radius = radius;
 }
 
-Circle shape_create_circle()
+Circle *shape_create_circle(Circle *circle)
 {
+    Circle *ptr = (Circle *)malloc(sizeof(Circle));
+    circle_init(ptr, circle->radius);
 
-} */
+    return ptr;
+}
 
-void shape_free_circle(Circle *circle)
+void shape_free_circle(CircleCollider *circle)
 {
     free(circle);
 }

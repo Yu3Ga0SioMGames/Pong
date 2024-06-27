@@ -16,7 +16,7 @@ struct
     Point p;
     int h;
     int w;
-} Rect;
+} RectangleCollider;
 
 typedef
 struct
@@ -30,20 +30,20 @@ struct
 {
     Point center;
     int r;
-} Circle;
+} CircleCollider;
 
-bool circle_cross_rect(Circle, Rect);
+bool circle_cross_rect(CircleCollider, RectangleCollider);
 
-bool circle_cross_circle(Circle, Circle);
+bool circle_cross_circle(CircleCollider, CircleCollider);
 
-bool circle_cross_point(Circle, Point);
+bool circle_cross_point(CircleCollider, Point);
 
 bool point_cross_segment(int, Segment);
 
 bool segment_cross_segment(Segment, Segment);
 
-bool rect_cross_point(Rect, Point);
+bool rect_cross_point(RectangleCollider, Point);
 
-bool rect_cross_rect(Rect, Rect);
+bool rect_cross_rect(RectangleCollider, RectangleCollider);
 
 #endif

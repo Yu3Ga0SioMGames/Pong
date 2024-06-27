@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1713123500 source:/home/yu3ga/Projects/Programming/Programs/Pong/rectangle.c
+1719506265 source:/home/yu3ga/Projects/Programming/Programs/Pong/rectangle.c
 	<stdbool.h>
 	"collision.h"
 
-1713123500 /home/yu3ga/Projects/Programming/Programs/Pong/collision.h
+1719506265 /home/yu3ga/Projects/Programming/Programs/Pong/collision.h
 	<stdbool.h>
 
-1719254361 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
+1719514280 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
 	<math.h>
 	<stdint.h>
 	<stdlib.h>
@@ -597,7 +597,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1713123701 source:/home/yu3ga/Projects/Programming/Programs/Pong/circle.c
+1719506265 source:/home/yu3ga/Projects/Programming/Programs/Pong/circle.c
 	<stdbool.h>
 	"collision.h"
 
@@ -620,11 +620,11 @@
 	"vector.h"
 	"collision.h"
 
-1719254361 /home/yu3ga/Projects/Programming/Programs/Pong/shape.h
+1719509822 /home/yu3ga/Projects/Programming/Programs/Pong/shape.h
 	<SDL2/SDL.h>
 	"vector.h"
 
-1719254361 source:/home/yu3ga/Projects/Programming/Programs/Pong/shape.c
+1719513632 source:/home/yu3ga/Projects/Programming/Programs/Pong/shape.c
 	<stdlib.h>
 	"shape.h"
 

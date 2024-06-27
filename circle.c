@@ -2,7 +2,7 @@
 
 #include "collision.h"
 
-bool circle_cross_rect(Circle circle, Rect rect)
+bool circle_cross_rect(CircleCollider circle, RectangleCollider rect)
 {
     int left = rect.p.x;
     int right = rect.p.x + rect.w;
@@ -18,7 +18,7 @@ bool circle_cross_rect(Circle circle, Rect rect)
     }
 
     if(cross_v || cross_h) {
-        Rect bbox;
+        RectangleCollider bbox;
         bbox.h = circle.r * 2;
         bbox.w = bbox.h;
         bbox.p.x = circle.center.x - circle.r;
@@ -55,7 +55,7 @@ bool circle_cross_rect(Circle circle, Rect rect)
     return circle_cross_point(circle, corner);
 }
 
-bool circle_cross_circle(Circle c1, Circle c2)
+bool circle_cross_circle(CircleCollider c1, CircleCollider c2)
 {
     int y_diff = c1.center.y - c2.center.y;
     int x_diff = c1.center.x - c2.center.x;
@@ -65,7 +65,7 @@ bool circle_cross_circle(Circle c1, Circle c2)
     return l_2 <= c1.r * c1.r + 2 * c1.r * c2.r + c2.r * c2.r;
 }
 
-bool circle_cross_point(Circle circle, Point point)
+bool circle_cross_point(CircleCollider circle, Point point)
 {
     int y_diff = circle.center.y - point.y;
     int x_diff = circle.center.x - point.x;

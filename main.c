@@ -15,8 +15,8 @@ struct
     int current_color;
     SDL_Color colors[4];
     Point cursor;
-    Rect cursor_rect;
-    Rect rects[5];
+    RectangleCollider cursor_rect;
+    RectangleCollider rects[5];
     bool cross[5];
 } SquareGameState;
 
@@ -32,6 +32,7 @@ struct
     Vector cursor;
     Triangle *polygon;
     Square square;
+    Circle c;
 } VectorGameState;
 
 void InitSquareGameState(SquareGameState *state)
@@ -97,6 +98,8 @@ void InitVectorGameState(VectorGameState *state)
     state->polygon = shape_create_triangle(vectors);
 
     square_init(&(state->square), 25, 25);
+
+    circle_init(&(state->c), 50);
 }
 
 void FreeVectorGameState(VectorGameState *state)
@@ -181,7 +184,7 @@ int SquareRender(SDL_Renderer *renderer, SquareGameState *game_state)
                                draw_color->b,
                                draw_color->a);
         SDL_Rect sdl_rect;
-        Rect *rect = &(game_state->rects[i]);
+        RectangleCollider *rect = &(game_state->rects[i]);
         sdl_rect.x = rect->p.x;
         sdl_rect.y = rect->p.y;
         sdl_rect.h = rect->h;
@@ -198,7 +201,7 @@ int SquareRender(SDL_Renderer *renderer, SquareGameState *game_state)
                            color->b,
                            color->a);
     SDL_Rect sdl_rect;
-    Rect *rect = &(game_state->cursor_rect);
+    RectangleCollider *rect = &(game_state->cursor_rect);
     sdl_rect.x = rect->p.x;
     sdl_rect.y = rect->p.y;
     sdl_rect.h = rect->h;
@@ -319,10 +322,14 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
     result = triangle_scale(&result, state->scale);
     shape_draw(renderer, &result, 625, 425);
 
-    Square r;
-    r = square_rotate(&(state->square), state->angle);
-    r = square_scale(&r, state->scale);
+    AnyShape r;
+    // r = square_rotate(&r, state->angle);
+    r = shape_scale(&(state->square), state->scale);
     shape_draw(renderer, &r, 375, 275);
+
+    AnyShape c;
+    c = shape_scale(&(state->c), state->scale * 0.5);
+    shape_draw(renderer, &c, 650, 125);
 
     SDL_RenderPresent(renderer);
 

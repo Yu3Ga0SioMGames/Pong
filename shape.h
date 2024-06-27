@@ -5,31 +5,18 @@
 
 #include "vector.h"
 
-typedef void *ShapePtr;
-typedef void (*shape_draw_ptr)(SDL_Renderer *, ShapePtr, int, int);
-typedef void (*shape_rotate_ptr)(ShapePtr, float);
-typedef void (*shape_scale_ptr)(ShapePtr, float);
-
 typedef
 struct
 {
-    shape_draw_ptr draw;
-    shape_rotate_ptr rotate;
-    shape_scale_ptr scale;
-} ShapeMTable;
-
-typedef
-struct
-{
-    ShapeMTable *m_table;
+    void *m_table;
 } Shape;
 
-/* typedef
+typedef
 struct
 {
     Shape header;
     int radius;
-} Circle; */
+} Circle;
 
 typedef
 struct
@@ -45,11 +32,32 @@ struct
     Point points[3];
 } Triangle;
 
+typedef
+union {
+    Shape header;
+    Circle circle;
+    Triangle triangle;
+    Square square;
+} AnyShape;
+
+typedef void *ShapePtr;
+typedef void (*shape_draw_ptr)(SDL_Renderer *, ShapePtr, int, int);
+typedef AnyShape (*shape_rotate_ptr)(ShapePtr, float);
+typedef AnyShape (*shape_scale_ptr)(ShapePtr, float);
+
+typedef
+struct
+{
+    shape_draw_ptr draw;
+    shape_rotate_ptr rotate;
+    shape_scale_ptr scale;
+} ShapeMTable;
+
 void shape_draw(SDL_Renderer *, Shape *, int, int);
 
-Shape shape_rotate(Shape *, float);
+AnyShape shape_rotate(Shape *, float);
 
-Shape shape_scale(Shape *, float);
+AnyShape shape_scale(Shape *, float);
 
 // Shape shape_rotate_around(Shape, Angle, RotationCenter);
 
@@ -59,9 +67,9 @@ Square square_rotate(Square *, float);
 
 Square square_scale(Square *, float);
 
-/* void circle_draw(SDL_Renderer *, Circle *, int, int);
+void circle_draw(SDL_Renderer *, Circle *, int, int);
 
-Circle circle_scale(Circle *, float); */
+Circle circle_scale(Circle *, float);
 
 void triangle_draw(SDL_Renderer *, Triangle *, int, int);
 
@@ -69,11 +77,11 @@ Triangle triangle_rotate(Triangle *, float);
 
 Triangle triangle_scale(Triangle *, float);
 
-/* void circle_init(Circle *);
+void circle_init(Circle *, int);
 
-Circle shape_create_circle(); */
+Circle *shape_create_circle(Circle *);
 
-void shape_free_circle(Circle *);
+void shape_free_circle(CircleCollider *);
 
 void square_init(Square *, int, int);
 

@@ -2,7 +2,7 @@
 
 #include "collision.h"
 
-Segment get_rect_proj_x(Rect r)
+Segment get_rect_proj_x(RectangleCollider r)
 {
     Segment proj;
     proj.start = r.p.x;
@@ -11,7 +11,7 @@ Segment get_rect_proj_x(Rect r)
     return proj;
 }
 
-Segment get_rect_proj_y(Rect r)
+Segment get_rect_proj_y(RectangleCollider r)
 {
     Segment proj;
     proj.start = r.p.y;
@@ -25,7 +25,7 @@ bool point_cross_segment(int p, Segment proj)
     return p >= proj.start && p <= proj.end;
 }
 
-bool rect_cross_point(Rect r, Point p)
+bool rect_cross_point(RectangleCollider r, Point p)
 {
     Segment r_x = get_rect_proj_x(r);
     Segment r_y = get_rect_proj_y(r);
@@ -41,7 +41,7 @@ bool segment_cross_segment(Segment a, Segment b)
            point_cross_segment(b.start, a);
 }
 
-bool rect_cross_rect(Rect a, Rect b)
+bool rect_cross_rect(RectangleCollider a, RectangleCollider b)
 {
     return segment_cross_segment(get_rect_proj_x(a),
                                  get_rect_proj_x(b)) &&
