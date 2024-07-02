@@ -3,6 +3,10 @@
 
 #include <stdbool.h>
 
+#define COLLIDER_TYPE_NONE 0
+#define COLLIDER_TYPE_CIRCLE (COLLIDER_TYPE_NONE + 1)
+#define COLLIDER_TYPE_RECTANGLE (COLLIDER_TYPE_CIRCLE + 1)
+
 typedef
 struct
 {

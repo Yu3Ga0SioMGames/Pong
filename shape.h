@@ -63,19 +63,19 @@ AnyShape shape_scale(Shape *, float);
 
 void square_draw(SDL_Renderer *, Square *, int, int);
 
-Square square_rotate(Square *, float);
+AnyShape square_rotate(Square *, float);
 
-Square square_scale(Square *, float);
+AnyShape square_scale(Square *, float);
 
 void circle_draw(SDL_Renderer *, Circle *, int, int);
 
-Circle circle_scale(Circle *, float);
+AnyShape circle_scale(Circle *, float);
 
 void triangle_draw(SDL_Renderer *, Triangle *, int, int);
 
-Triangle triangle_rotate(Triangle *, float);
+AnyShape triangle_rotate(Triangle *, float);
 
-Triangle triangle_scale(Triangle *, float);
+AnyShape triangle_scale(Triangle *, float);
 
 void circle_init(Circle *, int);
 

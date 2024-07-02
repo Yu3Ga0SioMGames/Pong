@@ -317,19 +317,19 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
     SDL_RenderDrawLine(renderer, v[2].x, v[2].y,
                        v[0].x, v[0].y);
 
-    Triangle result;
+    AnyShape result;
     result = triangle_rotate(state->polygon, state->angle);
     result = triangle_scale(&result, state->scale);
     shape_draw(renderer, &result, 625, 425);
 
-    AnyShape r;
-    // r = square_rotate(&r, state->angle);
-    r = shape_scale(&(state->square), state->scale);
-    shape_draw(renderer, &r, 375, 275);
-
     AnyShape c;
     c = shape_scale(&(state->c), state->scale * 0.5);
     shape_draw(renderer, &c, 650, 125);
+
+    AnyShape r;
+    r = shape_scale(&(state->square), state->scale);
+    r = shape_rotate(&r, state->angle);
+    shape_draw(renderer, &r, 375, 275);
 
     SDL_RenderPresent(renderer);
 
@@ -360,7 +360,7 @@ int main()
         SquareActionHandler(&square_game_state);
 
         SquareRender(renderer, &square_game_state);
-    } */
+    }
 
     VectorGameState vector_game_state;
     InitVectorGameState(&vector_game_state);
@@ -371,7 +371,7 @@ int main()
 
         VectorRender(renderer, &vector_game_state);
     }
-    FreeVectorGameState(&vector_game_state);
+    FreeVectorGameState(&vector_game_state); */
 
     SDL_DestroyRenderer(renderer);
 

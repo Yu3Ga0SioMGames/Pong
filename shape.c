@@ -60,25 +60,25 @@ void square_draw(SDL_Renderer *renderer, Square *polygon, int x, int y)
                        polygon->points[0].x + x, polygon->points[0].y + y);
 }
 
-Square square_rotate(Square *polygon, float angle)
+AnyShape square_rotate(Square *polygon, float angle)
 {
-    Square result;
-    result.header = polygon->header;
+    AnyShape result;
+    result.square.header = polygon->header;
 
     for(int i = 0; i < 4; ++i) {
-        result.points[i] = vector_rotate(polygon->points[i], angle);
+        result.square.points[i] = vector_rotate(polygon->points[i], angle);
     }
 
     return result;
 }
 
-Square square_scale(Square *polygon, float factor)
+AnyShape square_scale(Square *polygon, float factor)
 {
-    Square result;
-    result.header = polygon->header;
+    AnyShape result;
+    result.square.header = polygon->header;
 
     for(int i = 0; i < 4; ++i) {
-        result.points[i] = vector_multiplication(polygon->points[i], factor);
+        result.square.points[i] = vector_multiplication(polygon->points[i], factor);
     }
 
     return result;
@@ -108,11 +108,11 @@ void circle_draw(SDL_Renderer *renderer, Circle *circle, int x, int y)
                        points[0].x * r + x, points[0].y * r + y);
 }
 
-Circle circle_scale(Circle *circle, float factor)
+AnyShape circle_scale(Circle *circle, float factor)
 {
-    Circle result;
-    result.header = circle->header;
-    result.radius = circle->radius * factor;
+    AnyShape result;
+    result.circle.header = circle->header;
+    result.circle.radius = circle->radius * factor;
 
     return result;
 }
@@ -128,25 +128,25 @@ void triangle_draw(SDL_Renderer *renderer, Triangle *polygon, int x, int y)
                        polygon->points[0].x + x, polygon->points[0].y + y);
 }
 
-Triangle triangle_rotate(Triangle *polygon, float angle)
+AnyShape triangle_rotate(Triangle *polygon, float angle)
 {
-    Triangle result;
-    result.header = polygon->header;
+    AnyShape result;
+    result.triangle.header = polygon->header;
 
     for(int i = 0; i < 3; ++i) {
-        result.points[i] = vector_rotate(polygon->points[i], angle);
+        result.triangle.points[i] = vector_rotate(polygon->points[i], angle);
     }
 
     return result;
 }
 
-Triangle triangle_scale(Triangle *polygon, float factor)
+AnyShape triangle_scale(Triangle *polygon, float factor)
 {
-    Triangle result;
-    result.header = polygon->header;
+    AnyShape result;
+    result.triangle.header = polygon->header;
 
     for(int i = 0; i < 3; ++i) {
-        result.points[i] = vector_multiplication(polygon->points[i], factor);
+        result.triangle.points[i] = vector_multiplication(polygon->points[i], factor);
     }
 
     return result;
