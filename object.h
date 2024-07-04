@@ -22,6 +22,6 @@ bool check_collision(const GameObject *, const GameObject *);
 
 void collision_resolution(GameObject *, GameObject *);
 
-// void draw_gameobject();
+void draw_gameobject(SDL_Renderer *, GameObject *, int, int);
 
 #endif

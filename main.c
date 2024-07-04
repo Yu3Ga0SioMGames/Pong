@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "shape.h"
+#include "object.h"
 #include "vector.h"
 #include "collision.h"
 
@@ -34,6 +35,17 @@ struct
     Square square;
     Circle c;
 } VectorGameState;
+
+typedef
+struct
+{
+    bool exit;
+    int current_color;
+    SDL_Color color[3];
+    GameObject racket_1;
+    GameObject racket_2;
+    GameObject boll;
+} PongGameState;
 
 void InitSquareGameState(SquareGameState *state)
 {
@@ -105,6 +117,84 @@ void InitVectorGameState(VectorGameState *state)
 void FreeVectorGameState(VectorGameState *state)
 {
     shape_free_triangle(state->polygon);
+}
+
+void InitPongGameState(PongGameState *pong_game_state)
+{
+    pong_game_state->exit = false;
+
+    pong_game_state->current_color = 0;
+
+    pong_game_state->color[0].r = 0;
+    pong_game_state->color[0].g = 0;
+    pong_game_state->color[0].b = 0;
+    pong_game_state->color[0].a = 255;
+
+    pong_game_state->color[1].r = 255;
+    pong_game_state->color[1].g = 0;
+    pong_game_state->color[1].b = 0;
+    pong_game_state->color[1].a = 255;
+
+    pong_game_state->color[2].r = 0;
+    pong_game_state->color[2].g = 255;
+    pong_game_state->color[2].b = 0;
+    pong_game_state->color[2].a = 255;
+
+    GameObject *rk = &pong_game_state->racket_1;
+    Square *racket_shape = shape_create_square(120, 15);
+    rk->scene_position.x = 15;
+    rk->scene_position.y = 15;
+    rk->direction.x = 0;
+    rk->direction.y = 0;
+    rk->shape = racket_shape;
+    rk->velocity.x = 0;
+    rk->velocity.y = 0;
+    rk->collider_type = 2;
+    rk->collider = malloc(sizeof(RectangleCollider));
+    RectangleCollider *rc = (RectangleCollider *)(rk->collider);
+    rc->p.x = 15;
+    rc->p.y = 15;
+    rc->h = 120;
+    rc->w = 15;
+
+    rk = &pong_game_state->racket_2;
+    rk->scene_position.x = 770;
+    rk->scene_position.y = 465;
+    rk->direction.x = 0;
+    rk->direction.y = 0;
+    rk->shape = racket_shape;
+    rk->velocity.x = 0;
+    rk->velocity.y = 0;
+    rk->collider_type = 2;
+    rk->collider = (RectangleCollider *)malloc(sizeof(RectangleCollider));
+    rc = (RectangleCollider *)(rk->collider);
+    rc->p.x = 770;
+    rc->p.y = 465;
+    rc->h = 120;
+    rc->w = 15;
+
+    Circle *boll_shape = shape_create_circle(7);
+    rk = &pong_game_state->boll;
+    rk->scene_position.x = 400;
+    rk->scene_position.y = 300;
+    rk->direction.x = 0;
+    rk->direction.y = 0;
+    rk->shape = boll_shape;
+    rk->velocity.x = 0;
+    rk->velocity.y = 0;
+    rk->collider_type = 2;
+    rk->collider = (CircleCollider *)malloc(sizeof(CircleCollider));
+    CircleCollider *cr = (CircleCollider *)(rk->collider);
+    cr->center.x = 400;
+    cr->center.y = 300;
+    cr->r = 7;
+}
+
+void FreePongGameState(PongGameState *pong_game_state)
+{
+    shape_free_square(pong_game_state->racket_1.collider);
+    shape_free_square(pong_game_state->racket_2.collider);
+    shape_free_circle(pong_game_state->boll.collider);
 }
 
 int SquareInputHandler(SquareGameState *game_state)
@@ -324,12 +414,77 @@ int VectorRender(SDL_Renderer *renderer, VectorGameState *state)
 
     AnyShape c;
     c = shape_scale(&(state->c), state->scale * 0.5);
-    shape_draw(renderer, &c, 650, 125);
+    shape_draw(renderer, (Shape *)(&c), 650, 125);
 
     AnyShape r;
     r = shape_scale(&(state->square), state->scale);
     r = shape_rotate(&r, state->angle);
     shape_draw(renderer, &r, 375, 275);
+
+    SDL_RenderPresent(renderer);
+
+    return 0;
+}
+
+int PongInputHandler(PongGameState *pong_game_state)
+{
+    if(NULL == pong_game_state) {
+        return 1;
+    }
+
+    SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+        switch(event.type) {
+        case SDL_KEYDOWN:
+            if(SDLK_ESCAPE != event.key.keysym.sym) {
+                break;
+            }
+        case SDL_QUIT:
+            pong_game_state->exit = true;
+            break;
+        default:
+            break;
+        }
+    }
+
+    return 0;
+}
+
+int PongActionHandler(PongGameState *pong_game_state)
+{
+    return 0;
+}
+
+int PongRender(SDL_Renderer *renderer, PongGameState *pong_game_state)
+{
+    SDL_Color *palette = pong_game_state->color;
+    int clear_color_index = pong_game_state->current_color;
+    SDL_Color *clear_color = &(palette[clear_color_index]);
+    if(0 != SDL_SetRenderDrawColor(renderer,
+                                   clear_color->r,
+                                   clear_color->g,
+                                   clear_color->b,
+                                   clear_color->a)) {
+        return 1;
+    }
+    if(SDL_RenderClear(renderer) != 0) {
+        return 1;
+    }
+
+    for(int i = 0; i < 3; ++i) {
+        SDL_Color *draw_color = &(palette[0]);
+        SDL_SetRenderDrawColor(renderer,
+                               draw_color->r,
+                               draw_color->g,
+                               draw_color->b,
+                               draw_color->a);
+    }
+    SDL_Color *color = &(palette[2]);
+    SDL_SetRenderDrawColor(renderer,
+                           color->r,
+                           color->g,
+                           color->b,
+                           color->a);
 
     SDL_RenderPresent(renderer);
 
@@ -372,6 +527,17 @@ int main()
         VectorRender(renderer, &vector_game_state);
     }
     FreeVectorGameState(&vector_game_state); */
+
+    PongGameState pong_game_state;
+    InitPongGameState(&pong_game_state);
+    while(!(pong_game_state.exit)) {
+        PongInputHandler(&pong_game_state);
+
+        PongActionHandler(&pong_game_state);
+
+        PongRender(renderer, &pong_game_state);
+    }
+    FreePongGameState(&pong_game_state);
 
     SDL_DestroyRenderer(renderer);
 

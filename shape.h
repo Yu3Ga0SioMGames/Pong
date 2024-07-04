@@ -79,13 +79,13 @@ AnyShape triangle_scale(Triangle *, float);
 
 void circle_init(Circle *, int);
 
-Circle *shape_create_circle(Circle *);
+Circle *shape_create_circle(int);
 
 void shape_free_circle(CircleCollider *);
 
 void square_init(Square *, int, int);
 
-Square *shape_create_square(Square *, int, int);
+Square *shape_create_square(int, int);
 
 void shape_free_square(Square *);
 

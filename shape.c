@@ -159,10 +159,10 @@ void circle_init(Circle *circle, int radius)
     circle->radius = radius;
 }
 
-Circle *shape_create_circle(Circle *circle)
+Circle *shape_create_circle(int radius)
 {
     Circle *ptr = (Circle *)malloc(sizeof(Circle));
-    circle_init(ptr, circle->radius);
+    circle_init(ptr, radius);
 
     return ptr;
 }
@@ -189,7 +189,7 @@ void square_init(Square *ptr, int h, int w)
     ptr->points[3].y = h / 2;
 }
 
-Square *shape_create_square(Square *square, int h, int w)
+Square *shape_create_square(int h, int w)
 {
     Square *ptr = (Square *)malloc(sizeof(Square) + sizeof(Vector) + 4);
     square_init(ptr, h, w);
