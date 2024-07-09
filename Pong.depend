@@ -6,15 +6,12 @@
 1719938327 /home/yu3ga/Projects/Programming/Programs/Pong/collision.h
 	<stdbool.h>
 
-1720116213 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
-	<math.h>
+1720549064 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
 	<stdint.h>
 	<stdlib.h>
-	<unistd.h>
 	<SDL2/SDL.h>
 	"shape.h"
 	"object.h"
-	"vector.h"
 	"collision.h"
 
 1715027668 /usr/include/stdint.h
@@ -613,21 +610,22 @@
 1717941258 source:/home/yu3ga/Projects/Programming/Programs/Pong/relative_rotate.c
 	"collision.h"
 
-1720116116 source:/home/yu3ga/Projects/Programming/Programs/Pong/object.c
+1720548608 source:/home/yu3ga/Projects/Programming/Programs/Pong/object.c
 	<stdbool.h>
+	<sys/param.h>
 	"object.h"
 
-1720114445 /home/yu3ga/Projects/Programming/Programs/Pong/object.h
+1720548544 /home/yu3ga/Projects/Programming/Programs/Pong/object.h
 	<stdbool.h>
 	"shape.h"
 	"vector.h"
 	"collision.h"
 
-1720114445 /home/yu3ga/Projects/Programming/Programs/Pong/shape.h
+1720548977 /home/yu3ga/Projects/Programming/Programs/Pong/shape.h
 	<SDL2/SDL.h>
 	"vector.h"
 
-1720114445 source:/home/yu3ga/Projects/Programming/Programs/Pong/shape.c
+1720548977 source:/home/yu3ga/Projects/Programming/Programs/Pong/shape.c
 	<stdlib.h>
 	"shape.h"
 

@@ -59,8 +59,6 @@ AnyShape shape_rotate(Shape *, float);
 
 AnyShape shape_scale(Shape *, float);
 
-// Shape shape_rotate_around(Shape, Angle, RotationCenter);
-
 void square_draw(SDL_Renderer *, Square *, int, int);
 
 AnyShape square_rotate(Square *, float);

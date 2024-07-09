@@ -16,6 +16,7 @@ struct
     Vector velocity;
     int collider_type;
     void *collider;
+    Vector collider_displacement;
 } GameObject;
 
 bool check_collision(const GameObject *, const GameObject *);
@@ -23,5 +24,12 @@ bool check_collision(const GameObject *, const GameObject *);
 void collision_resolution(GameObject *, GameObject *);
 
 void draw_gameobject(SDL_Renderer *, GameObject *, int, int);
+
+void move_gameobject(GameObject *obj, int x, int y);
+
+void move_gameobject_bounded(GameObject *obj,
+                             int x, int y,
+                             int x_min, int x_max,
+                             int y_min, int y_max);
 
 #endif

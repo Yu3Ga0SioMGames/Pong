@@ -44,11 +44,6 @@ AnyShape shape_scale(Shape *shape, float factor)
     return result;
 }
 
-/* Shape shape_rotate_around(Shape, Angle, RotationCenter)
-{
-
-} */
-
 void square_draw(SDL_Renderer *renderer, Square *polygon, int x, int y)
 {
     for(int i = 0; i < 3; ++i) {
