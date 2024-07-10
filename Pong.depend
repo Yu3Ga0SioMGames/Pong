@@ -6,7 +6,7 @@
 1719938327 /home/yu3ga/Projects/Programming/Programs/Pong/collision.h
 	<stdbool.h>
 
-1720549064 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
+1720634909 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
 	<stdint.h>
 	<stdlib.h>
 	<SDL2/SDL.h>
@@ -595,7 +595,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1719506265 source:/home/yu3ga/Projects/Programming/Programs/Pong/circle.c
+1720632381 source:/home/yu3ga/Projects/Programming/Programs/Pong/circle.c
 	<stdbool.h>
 	"collision.h"
 
@@ -610,7 +610,7 @@
 1717941258 source:/home/yu3ga/Projects/Programming/Programs/Pong/relative_rotate.c
 	"collision.h"
 
-1720548608 source:/home/yu3ga/Projects/Programming/Programs/Pong/object.c
+1720635005 source:/home/yu3ga/Projects/Programming/Programs/Pong/object.c
 	<stdbool.h>
 	<sys/param.h>
 	"object.h"

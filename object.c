@@ -15,15 +15,15 @@ bool check_collision(const GameObject *first, const GameObject *second)
                                  *((RectangleCollider *)(second->collider)));
     }
 
-    return circle_cross_circle(*((CircleCollider *)(first->collider)),
-                               *((CircleCollider *)(second->collider)));
+    return circle_cross_rect(*((CircleCollider *)(second->collider)),
+                               *((RectangleCollider *)(first->collider)));
 }
 
 void collision_resolution(GameObject *first, GameObject *second)
 {
     do {
-        first->scene_position.x -= sign(first->velocity.x);
-    } while(!check_collision(first, second));
+        move_gameobject(first, -sign(first->velocity.x), 0);
+    } while(check_collision(first, second));
 
     first->velocity.x = -(first->velocity.x);
 }

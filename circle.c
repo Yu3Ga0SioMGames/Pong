@@ -10,8 +10,8 @@ bool circle_cross_rect(CircleCollider circle, RectangleCollider rect)
     int up = rect.p.y;
     int down = rect.p.y + rect.h;
 
-    bool cross_v = circle.center.y <= up && circle.center.y >= down;
-    bool cross_h = circle.center.x <= left && circle.center.x >= right;
+    bool cross_v = circle.center.y >= up && circle.center.y <= down;
+    bool cross_h = circle.center.x >= left && circle.center.x <= right;
 
     if(cross_v && cross_h) {
         return true;
@@ -72,5 +72,5 @@ bool circle_cross_point(CircleCollider circle, Point point)
 
     int l_2 = x_diff * x_diff + y_diff * y_diff;
 
-    return circle.r * circle.r <= l_2;
+    return circle.r * circle.r >= l_2;
 }

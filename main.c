@@ -6,9 +6,13 @@
 #include "object.h"
 #include "collision.h"
 
+const int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 800;
 const int racket_speed = 6;
 const int racket_height = 120;
-const int racket_weight = 25;
+const int racket_width = 25;
+const int ball_radius = 1;
+const int ball_collider_radius = ball_radius * 10;
 
 typedef
 struct
@@ -18,11 +22,12 @@ struct
     bool r1Down;
     bool r2Up;
     bool r2Down;
+    bool game_start;
     int current_color;
     SDL_Color color[3];
     GameObject racket_1;
     GameObject racket_2;
-    GameObject boll;
+    GameObject ball;
 } PongGameState;
 
 void InitPongGameState(PongGameState *pong_game_state)
@@ -33,6 +38,8 @@ void InitPongGameState(PongGameState *pong_game_state)
     pong_game_state->r1Down = false;
     pong_game_state->r2Up = false;
     pong_game_state->r2Down = false;
+
+    pong_game_state->game_start = false;
 
     pong_game_state->current_color = 0;
 
@@ -52,8 +59,8 @@ void InitPongGameState(PongGameState *pong_game_state)
     pong_game_state->color[2].a = 255;
 
     GameObject *rk = &pong_game_state->racket_1;
-    Square *racket_shape = shape_create_square(racket_height, racket_weight);
-    // Vector collider_displacement = ;
+    Square *racket_shape = shape_create_square(racket_height, racket_width);
+    Vector collider_displacement = {-racket_width / 2, -racket_height / 2};
     rk->scene_position.x = 40;
     rk->scene_position.y = 90;
     rk->direction.x = 0;
@@ -66,9 +73,9 @@ void InitPongGameState(PongGameState *pong_game_state)
     RectangleCollider *rc = (RectangleCollider *)(rk->collider);
     rc->p.x = rk->scene_position.x;
     rc->p.y = rk->scene_position.y;
-    rc->w = racket_shape->points->x;
-    rc->h = racket_shape->points->y;
-    // rk->collider_displacement.x = ;
+    rc->w = racket_width;
+    rc->h = racket_height;
+    rk->collider_displacement = collider_displacement;
 
     rk = &pong_game_state->racket_2;
     rk->scene_position.x = 760;
@@ -83,31 +90,34 @@ void InitPongGameState(PongGameState *pong_game_state)
     rc = (RectangleCollider *)(rk->collider);
     rc->p.x = rk->scene_position.x;
     rc->p.y = rk->scene_position.y;
-    rc->w = racket_shape->points->x;
-    rc->h = racket_shape->points->y;
+    rc->w = racket_width;
+    rc->h = racket_height;
+    rk->collider_displacement = collider_displacement;
 
-    Circle *boll_shape = shape_create_circle(1);
-    rk = &pong_game_state->boll;
+    Circle *ball_shape = shape_create_circle(ball_radius);
+    rk = &pong_game_state->ball;
     rk->scene_position.x = 400;
     rk->scene_position.y = 300;
     rk->direction.x = 0;
     rk->direction.y = 0;
-    rk->shape = boll_shape;
-    rk->velocity.x = 0;
-    rk->velocity.y = 0;
+    rk->shape = ball_shape;
+    rk->velocity.x = 1;
+    rk->velocity.y = 20;
     rk->collider_type = 1;
     rk->collider = (CircleCollider *)malloc(sizeof(CircleCollider));
     CircleCollider *cr = (CircleCollider *)(rk->collider);
     cr->center.x = rk->scene_position.x;
     cr->center.y = rk->scene_position.y;
-    cr->r = boll_shape->radius * 10;
+    cr->r = ball_collider_radius;
+    rk->collider_displacement.x = 0;
+    rk->collider_displacement.y = 0;
 }
 
 void FreePongGameState(PongGameState *pong_game_state)
 {
     shape_free_square(pong_game_state->racket_1.collider);
     shape_free_square(pong_game_state->racket_2.collider);
-    shape_free_circle(pong_game_state->boll.collider);
+    shape_free_circle(pong_game_state->ball.collider);
 }
 
 int PongInputHandler(PongGameState *pong_game_state)
@@ -149,6 +159,9 @@ int PongInputHandler(PongGameState *pong_game_state)
             case SDLK_RCTRL:
                 pong_game_state->r2Down = true;
                 break;
+            case SDLK_SPACE:
+                pong_game_state->game_start = !(pong_game_state->game_start);
+                break;
             }
 
             if(SDLK_ESCAPE != event.key.keysym.sym) {
@@ -170,13 +183,18 @@ int PongActionHandler(PongGameState *pong_game_state)
 {
     int x_mov = 0;
     int y_mov = 0;
+    const int upper_bound = WINDOW_HEIGHT - racket_height / 2 - 1;
+    const int lower_bound = racket_height / 2 + 1;
     if(pong_game_state->r1Up) {
         y_mov -= racket_speed;
     }
     if(pong_game_state->r1Down) {
         y_mov += racket_speed;
     }
-    move_gameobject_bounded(&(pong_game_state->racket_1), x_mov, y_mov, 0, 800, 0, 600);
+    move_gameobject_bounded(&(pong_game_state->racket_1),
+                            x_mov, y_mov,
+                            0, WINDOW_WIDTH,
+                            lower_bound, upper_bound);
 
     x_mov = 0;
     y_mov = 0;
@@ -186,7 +204,31 @@ int PongActionHandler(PongGameState *pong_game_state)
     if(pong_game_state->r2Down) {
         y_mov += racket_speed;
     }
-    move_gameobject(&(pong_game_state->racket_2), x_mov, y_mov);
+    move_gameobject_bounded(&(pong_game_state->racket_2),
+                            x_mov, y_mov,
+                            0, WINDOW_WIDTH,
+                            lower_bound, upper_bound);
+
+    GameObject *ball = &(pong_game_state->ball);
+    if(pong_game_state->game_start) {
+        move_gameobject(ball, ball->velocity.x, ball->velocity.y);
+
+        bool ck = check_collision(ball, &(pong_game_state->racket_1));
+        if(ck) {
+            collision_resolution(ball, &(pong_game_state->racket_1));
+        }
+
+        ck = check_collision(ball, &(pong_game_state->racket_2));
+        if(ck) {
+            collision_resolution(ball, &(pong_game_state->racket_2));
+        }
+
+        if((ball->scene_position.y + ball_collider_radius >= WINDOW_HEIGHT) ||
+            (ball->scene_position.y - ball_collider_radius <= 0)) {
+            ball->velocity.y = -ball->velocity.y;
+        }
+    }
+    // пропажа мяча при пропуске (только по x)
 
     return 0;
 }
@@ -239,9 +281,9 @@ int PongRender(SDL_Renderer *renderer, PongGameState *pong_game_state)
                            color->a);
 
     draw_gameobject(renderer,
-                    &(pong_game_state->boll),
-                    pong_game_state->boll.scene_position.x,
-                    pong_game_state->boll.scene_position.y);
+                    &(pong_game_state->ball),
+                    pong_game_state->ball.scene_position.x,
+                    pong_game_state->ball.scene_position.y);
 
     SDL_RenderPresent(renderer);
 
@@ -254,7 +296,7 @@ int main()
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Pong", 0, 0, 800, 600, 0);
+    SDL_Window *window = SDL_CreateWindow("Pong", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     if(window == NULL) {
         return 1;
     }
