@@ -8,11 +8,19 @@
 
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 800;
-const int racket_speed = 6;
+const int racket_speed = 8;
 const int racket_height = 120;
 const int racket_width = 25;
 const int ball_radius = 1;
 const int ball_collider_radius = ball_radius * 10;
+const Vector ball_start_position = {WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2};
+const int start_velocity_x = 6;
+const int start_velocity_y = 0;
+
+static inline int sign(int x)
+{
+    return (x < 0) ? -1 : 1;
+}
 
 typedef
 struct
@@ -23,6 +31,7 @@ struct
     bool r2Up;
     bool r2Down;
     bool game_start;
+    int counter;
     int current_color;
     SDL_Color color[3];
     GameObject racket_1;
@@ -40,6 +49,8 @@ void InitPongGameState(PongGameState *pong_game_state)
     pong_game_state->r2Down = false;
 
     pong_game_state->game_start = false;
+
+    pong_game_state->counter = 0;
 
     pong_game_state->current_color = 0;
 
@@ -96,13 +107,12 @@ void InitPongGameState(PongGameState *pong_game_state)
 
     Circle *ball_shape = shape_create_circle(ball_radius);
     rk = &pong_game_state->ball;
-    rk->scene_position.x = 400;
-    rk->scene_position.y = 300;
+    rk->scene_position = ball_start_position;
     rk->direction.x = 0;
     rk->direction.y = 0;
     rk->shape = ball_shape;
-    rk->velocity.x = 1;
-    rk->velocity.y = 20;
+    rk->velocity.x = start_velocity_x;
+    rk->velocity.y = start_velocity_y;
     rk->collider_type = 1;
     rk->collider = (CircleCollider *)malloc(sizeof(CircleCollider));
     CircleCollider *cr = (CircleCollider *)(rk->collider);
@@ -216,19 +226,40 @@ int PongActionHandler(PongGameState *pong_game_state)
         bool ck = check_collision(ball, &(pong_game_state->racket_1));
         if(ck) {
             collision_resolution(ball, &(pong_game_state->racket_1));
+            pong_game_state->counter++;
         }
 
         ck = check_collision(ball, &(pong_game_state->racket_2));
         if(ck) {
             collision_resolution(ball, &(pong_game_state->racket_2));
+            pong_game_state->counter++;
         }
 
         if((ball->scene_position.y + ball_collider_radius >= WINDOW_HEIGHT) ||
-            (ball->scene_position.y - ball_collider_radius <= 0)) {
+                (ball->scene_position.y - ball_collider_radius <= 0)) {
             ball->velocity.y = -ball->velocity.y;
         }
+
+        if(ball->scene_position.x <= 0) {
+            pong_game_state->game_start = false;
+            place_gameobject(ball, ball_start_position.x, ball_start_position.y);
+            ball->velocity.x = start_velocity_x;
+            ball->velocity.y = start_velocity_y;
+        }
+        if(ball->scene_position.x >= WINDOW_WIDTH) {
+            pong_game_state->game_start = false;
+            place_gameobject(ball, ball_start_position.x, ball_start_position.y);
+            ball->velocity.x = -start_velocity_x;
+            ball->velocity.y = start_velocity_y;
+        }
+
+        if(pong_game_state->counter == 3) {
+            ball->velocity.x += sign(ball->velocity.x);
+            pong_game_state->counter = 0;
+        }
     }
-    // пропажа мяча при пропуске (только по x)
+    // счёт и смена направления мяча после столкновения с ракеткой
+
 
     return 0;
 }
@@ -315,7 +346,7 @@ int main()
 
         PongRender(renderer, &pong_game_state);
 
-        SDL_Delay(1000 / 90);
+        SDL_Delay(1000 / 60);
     }
     FreePongGameState(&pong_game_state);
 

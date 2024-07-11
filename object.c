@@ -1,7 +1,25 @@
 #include <stdbool.h>
 #include <sys/param.h>
+#include <SDL2/SDL.h>
 
 #include "object.h"
+
+void collider_sync(GameObject *obj)
+{
+    void *collider = obj->collider;
+    switch(obj->collider_type) {
+    case COLLIDER_TYPE_CIRCLE:
+        ((CircleCollider *)collider)->center.x = obj->scene_position.x;
+        ((CircleCollider *)collider)->center.y = obj->scene_position.y;
+        break;
+    case COLLIDER_TYPE_RECTANGLE:
+        ((RectangleCollider *)collider)->p.x = obj->scene_position.x - ((RectangleCollider *)collider)->w / 2;
+        ((RectangleCollider *)collider)->p.y = obj->scene_position.y - ((RectangleCollider *)collider)->h / 2;
+        break;
+    default:
+        break;
+    }
+}
 
 static inline int sign(int x)
 {
@@ -16,7 +34,7 @@ bool check_collision(const GameObject *first, const GameObject *second)
     }
 
     return circle_cross_rect(*((CircleCollider *)(second->collider)),
-                               *((RectangleCollider *)(first->collider)));
+                             *((RectangleCollider *)(first->collider)));
 }
 
 void collision_resolution(GameObject *first, GameObject *second)
@@ -26,11 +44,30 @@ void collision_resolution(GameObject *first, GameObject *second)
     } while(check_collision(first, second));
 
     first->velocity.x = -(first->velocity.x);
+    first->velocity.y += (first->scene_position.y - second->scene_position.y) / 8;
 }
 
 void draw_gameobject(SDL_Renderer *renderer, GameObject *object, int x, int y)
 {
     shape_draw(renderer, object->shape, x, y);
+    if(object->collider_type == COLLIDER_TYPE_RECTANGLE) {
+        void *collider = object->collider;
+        SDL_Rect tmp_rect = {
+            ((RectangleCollider *)collider)->p.x,
+            ((RectangleCollider *)collider)->p.y,
+            ((RectangleCollider *)collider)->w,
+            ((RectangleCollider *)collider)->h
+        };
+        SDL_RenderDrawRect(renderer, &(tmp_rect));
+    }
+}
+
+void place_gameobject(GameObject *obj, int x, int y)
+{
+    obj->scene_position.x = x;
+    obj->scene_position.y = y;
+
+    collider_sync(obj);
 }
 
 void move_gameobject(GameObject *obj, int x, int y)
@@ -38,19 +75,7 @@ void move_gameobject(GameObject *obj, int x, int y)
     obj->scene_position.x += x;
     obj->scene_position.y += y;
 
-    void *collider = obj->collider;
-    switch(obj->collider_type) {
-    case COLLIDER_TYPE_CIRCLE:
-        ((CircleCollider *)collider)->center.x = obj->scene_position.x;
-        ((CircleCollider *)collider)->center.y = obj->scene_position.y;
-        break;
-    case COLLIDER_TYPE_RECTANGLE:
-        ((RectangleCollider *)collider)->p.x = obj->scene_position.x;
-        ((RectangleCollider *)collider)->p.y = obj->scene_position.y;
-        break;
-    default:
-        break;
-    }
+    collider_sync(obj);
 }
 
 void move_gameobject_bounded(GameObject *obj,
@@ -65,17 +90,5 @@ void move_gameobject_bounded(GameObject *obj,
     obj->scene_position.y = MIN(obj->scene_position.y, y_max);
     obj->scene_position.y = MAX(obj->scene_position.y, y_min);
 
-    void *collider = obj->collider;
-    switch(obj->collider_type) {
-    case COLLIDER_TYPE_CIRCLE:
-        ((CircleCollider *)collider)->center.x = obj->scene_position.x;
-        ((CircleCollider *)collider)->center.y = obj->scene_position.y;
-        break;
-    case COLLIDER_TYPE_RECTANGLE:
-        ((RectangleCollider *)collider)->p.x = obj->scene_position.x + obj->collider_displacement.x;
-        ((RectangleCollider *)collider)->p.y = obj->scene_position.y + obj->collider_displacement.y;
-        break;
-    default:
-        break;
-    }
+    collider_sync(obj);
 }

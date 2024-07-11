@@ -25,6 +25,8 @@ void collision_resolution(GameObject *, GameObject *);
 
 void draw_gameobject(SDL_Renderer *, GameObject *, int, int);
 
+void place_gameobject(GameObject *obj, int x, int y);
+
 void move_gameobject(GameObject *obj, int x, int y);
 
 void move_gameobject_bounded(GameObject *obj,
