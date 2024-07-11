@@ -50,16 +50,6 @@ void collision_resolution(GameObject *first, GameObject *second)
 void draw_gameobject(SDL_Renderer *renderer, GameObject *object, int x, int y)
 {
     shape_draw(renderer, object->shape, x, y);
-    if(object->collider_type == COLLIDER_TYPE_RECTANGLE) {
-        void *collider = object->collider;
-        SDL_Rect tmp_rect = {
-            ((RectangleCollider *)collider)->p.x,
-            ((RectangleCollider *)collider)->p.y,
-            ((RectangleCollider *)collider)->w,
-            ((RectangleCollider *)collider)->h
-        };
-        SDL_RenderDrawRect(renderer, &(tmp_rect));
-    }
 }
 
 void place_gameobject(GameObject *obj, int x, int y)

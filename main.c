@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 
 #include "shape.h"
@@ -16,6 +17,10 @@ const int ball_collider_radius = ball_radius * 10;
 const Vector ball_start_position = {WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2};
 const int start_velocity_x = 6;
 const int start_velocity_y = 0;
+SDL_Window *window;
+char *WINDOW_TITLE = "Pong \t %d : %d \t \t \t ";
+int player_1 = 0;
+int player_2 = 0;
 
 static inline int sign(int x)
 {
@@ -241,12 +246,14 @@ int PongActionHandler(PongGameState *pong_game_state)
         }
 
         if(ball->scene_position.x <= 0) {
+            player_2++;
             pong_game_state->game_start = false;
             place_gameobject(ball, ball_start_position.x, ball_start_position.y);
             ball->velocity.x = start_velocity_x;
             ball->velocity.y = start_velocity_y;
         }
         if(ball->scene_position.x >= WINDOW_WIDTH) {
+            player_1++;
             pong_game_state->game_start = false;
             place_gameobject(ball, ball_start_position.x, ball_start_position.y);
             ball->velocity.x = -start_velocity_x;
@@ -258,8 +265,15 @@ int PongActionHandler(PongGameState *pong_game_state)
             pong_game_state->counter = 0;
         }
     }
-    // счёт и смена направления мяча после столкновения с ракеткой
 
+    /* int snprintf(char *buffer, size_t n,
+                    const char *format-string, argument-list); */
+    int length = snprintf(NULL, 0, WINDOW_TITLE, player_1, player_2); // int length, так как возращаемый тип int у функции
+    char *buf[length + 1];
+    /* buf - это (Указатель на массив символов) форматирование строки length,
+    которая при неправильной записи может привести к ошибке (Не тем результатам, которые необходимы) */
+    snprintf(buf, length + 1, WINDOW_TITLE, player_1, player_2); // Сохраняем в буфер
+    SDL_SetWindowTitle(window, buf); // Устанавливаем результат
 
     return 0;
 }
@@ -327,7 +341,7 @@ int main()
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Pong", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    window = SDL_CreateWindow(WINDOW_TITLE, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     if(window == NULL) {
         return 1;
     }
