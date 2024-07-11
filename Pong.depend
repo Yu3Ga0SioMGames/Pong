@@ -6,7 +6,7 @@
 1719938327 /home/yu3ga/Projects/Programming/Programs/Pong/collision.h
 	<stdbool.h>
 
-1720722993 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
+1720729520 source:/home/yu3ga/Projects/Programming/Programs/Pong/main.c
 	<stdint.h>
 	<stdlib.h>
 	<string.h>

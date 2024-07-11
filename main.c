@@ -38,7 +38,7 @@ struct
     bool game_start;
     int counter;
     int current_color;
-    SDL_Color color[3];
+    SDL_Color color[4];
     GameObject racket_1;
     GameObject racket_2;
     GameObject ball;
@@ -73,6 +73,11 @@ void InitPongGameState(PongGameState *pong_game_state)
     pong_game_state->color[2].g = 255;
     pong_game_state->color[2].b = 0;
     pong_game_state->color[2].a = 255;
+
+    pong_game_state->color[3].r = 0;
+    pong_game_state->color[3].g = 0;
+    pong_game_state->color[3].b = 255;
+    pong_game_state->color[3].a = 255;
 
     GameObject *rk = &pong_game_state->racket_1;
     Square *racket_shape = shape_create_square(racket_height, racket_width);
@@ -265,15 +270,14 @@ int PongActionHandler(PongGameState *pong_game_state)
             pong_game_state->counter = 0;
         }
     }
+    if(!(pong_game_state->game_start)) {
+        ball->scene_position = ball_start_position;
+    }
 
-    /* int snprintf(char *buffer, size_t n,
-                    const char *format-string, argument-list); */
-    int length = snprintf(NULL, 0, WINDOW_TITLE, player_1, player_2); // int length, так как возращаемый тип int у функции
+    int length = snprintf(NULL, 0, WINDOW_TITLE, player_1, player_2);
     char *buf[length + 1];
-    /* buf - это (Указатель на массив символов) форматирование строки length,
-    которая при неправильной записи может привести к ошибке (Не тем результатам, которые необходимы) */
-    snprintf(buf, length + 1, WINDOW_TITLE, player_1, player_2); // Сохраняем в буфер
-    SDL_SetWindowTitle(window, buf); // Устанавливаем результат
+    snprintf(buf, length + 1, WINDOW_TITLE, player_1, player_2);
+    SDL_SetWindowTitle(window, buf);
 
     return 0;
 }
@@ -302,7 +306,8 @@ int PongRender(SDL_Renderer *renderer, PongGameState *pong_game_state)
                                draw_color->b,
                                draw_color->a);
     }
-    SDL_Color *color = &(palette[2]);
+
+    SDL_Color *color = &(palette[1]);
     SDL_SetRenderDrawColor(renderer,
                            color->r,
                            color->g,
@@ -313,12 +318,19 @@ int PongRender(SDL_Renderer *renderer, PongGameState *pong_game_state)
                     &(pong_game_state->racket_1),
                     pong_game_state->racket_1.scene_position.x,
                     pong_game_state->racket_1.scene_position.y);
+
+    color = &(palette[3]);
+    SDL_SetRenderDrawColor(renderer,
+                           color->r,
+                           color->g,
+                           color->b,
+                           color->a);
     draw_gameobject(renderer,
                     &(pong_game_state->racket_2),
                     pong_game_state->racket_2.scene_position.x,
                     pong_game_state->racket_2.scene_position.y);
 
-    color = &(palette[1]);
+    color = &(palette[2]);
     SDL_SetRenderDrawColor(renderer,
                            color->r,
                            color->g,
